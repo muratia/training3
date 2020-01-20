@@ -70,12 +70,7 @@ public class FileSystemStorageService implements StorageService {
                 logger.info("File Path from storing the file: " + path);
 
 
-                logger.info("Starting to store in database");
-                CsvProcessor csvProcessor = new CsvProcessor();
 
-                List<DataItem> items = csvProcessor.loadData(filePath.getAbsolutePath());
-                this.dataItemService.save(items);
-                logger.info("Data are saved");
 
             }
         } catch (IOException e) {

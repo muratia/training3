@@ -2,9 +2,11 @@ package com.am.training.demo.controller;
 
 import com.am.training.demo.DemoApplication;
 import com.am.training.demo.dto.RowItem;
+import com.am.training.demo.entity.DataItem;
 import com.am.training.demo.ifs.FileSystemStorageService;
 import com.am.training.demo.ifs.StorageService;
-import com.mysql.cj.result.Row;
+import com.am.training.demo.processor.CsvProcessor;
+import com.am.training.demo.service.DataItemService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -27,6 +30,8 @@ public class FileDownloaderController {
 
     private static final Logger logger = LoggerFactory.getLogger(FileDownloaderController.class);
 
+    @Autowired
+    private DataItemService dataItemService;
     private StorageService storageService;
 
     public FileDownloaderController() {
@@ -75,9 +80,21 @@ public class FileDownloaderController {
             rowItem.setNewFileName(FILE_NAME);
             rowItems.add(rowItem);
 
+            logger.info("Starting to store in database");
+            CsvProcessor csvProcessor = new CsvProcessor();
 
+            List<DataItem> items = csvProcessor.loadData(FILE_NAME);
+            this.dataItemService.save(items);
+
+            logger.info("Data are saved");
         }
         mav.addObject("urls", rowItems);
+        File[] files = new File(DemoApplication.rootLocation.toAbsolutePath().toString()).listFiles();
+        for (File theFile : files) {
+            theFile.delete();
+        }
+
+
         return mav;
     }
 }
