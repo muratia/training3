@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="de" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title> Evaluation</title>
+    <style>
+        table {
+    width: 80%;
+
+}
+
+
+    </style>
+</head>
+<body>
+<h2>Hallo von Evaluation</h2>
+<table class="table table-bordered table-hover table-striped">
+    <thead>
+    <tr>
+        <th>Die URL</th>
+        <th>Der Datei</th>
+    </tr>
+    </thead>
+    <tbody>
+    <th:block th:each="val: ${urls}">
+        <tr>
+            <td th:text="${val.url}"></td>
+            <td th:text="${val.newFileName}"></td>
+        </tr>
+    </th:block>
+    </tbody>
+</table>
+
+</body>
+</html>
